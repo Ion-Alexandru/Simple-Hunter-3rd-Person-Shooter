@@ -1,0 +1,42 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Cinemachine;
+
+public class ShootingShakeScript : MonoBehaviour
+{
+    public static ShootingShakeScript Instance { get; private set; }
+
+    [SerializeField] CinemachineVirtualCamera cinemachineVirtualCamera;
+    private float shakeTimer;
+
+    private void Awake()
+    {
+        Instance = this;
+        cinemachineVirtualCamera = GetComponent<CinemachineVirtualCamera>();
+    }
+
+    public void ShakeCamera(float intenisty, float time)
+    {
+        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+        cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = intenisty;
+
+        shakeTimer = time;
+
+    }
+
+    private void Update()
+    {
+        if(shakeTimer > 0)
+        {
+            shakeTimer -= Time.deltaTime;
+            if(shakeTimer <= 0)
+            {
+                CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0f;
+            }
+        }
+    }
+}
